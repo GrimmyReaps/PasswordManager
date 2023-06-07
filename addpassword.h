@@ -17,6 +17,9 @@ public:
 
 private:
     Ui::addPassword *ui;
+
+private slots:
+    void addNewPassword();
 };
 
 #endif // ADDPASSWORD_H
