@@ -17,6 +17,9 @@ set(PROJECT_SOURCES
         mainwindow.cpp
         mainwindow.h
         mainwindow.ui
+        addpassword.h
+        addpassword.cpp
+        addpassword.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

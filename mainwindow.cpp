@@ -21,7 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     connect(ui->quitButton, SIGNAL(clicked()), this, SLOT(close()));
-    //connect(ui->unhidePassword, SIGNAL(clicked(QTableWidget*)), this, SLOT(unhide(QTableWidget*)));
+    connect(ui->addPassword, SIGNAL(clicked()), this, SLOT(addPasswordWindow()));
 
 
     QTableWidget *passwords = ui->passwordsShower;
@@ -68,7 +68,6 @@ void MainWindow::readJson(){
 
         qDebug() << v.toObject().value("site").toString();
         qDebug() << v.toObject().value("password").toString();
-
         qDebug() << "---------------------------";
 
         passwordArray.append(helper);
@@ -105,12 +104,18 @@ void MainWindow::hide(QTableWidget *widget){
     widget->setItem(widget->currentRow(), 1, new QTableWidgetItem("hidden"));
 }
 
+void MainWindow::addPasswordWindow(){
+    newPasswordWindow = new addPassword(this);
+    newPasswordWindow->show();
+}
+
+//Button Click
 void MainWindow::on_unhidePassword_clicked()
 {
     unhide(ui->passwordsShower);
 }
 
-
+//Button Click
 void MainWindow::on_hidePassword_clicked()
 {
     hide(ui->passwordsShower);

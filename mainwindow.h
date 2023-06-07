@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QTableWidget>
+#include "addpassword.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -19,6 +20,7 @@ public:
 
 private:
     Ui::MainWindow *ui;
+    addPassword *newPasswordWindow;
     void initialSetup(QTableWidget *widget);
     void readJson();
     void fillTable(QTableWidget *widget);
@@ -28,5 +30,6 @@ private:
 private slots:
     void on_unhidePassword_clicked();
     void on_hidePassword_clicked();
+    void addPasswordWindow();
 };
 #endif // MAINWINDOW_H

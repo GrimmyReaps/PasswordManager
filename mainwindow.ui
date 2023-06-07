@@ -84,6 +84,19 @@
      <string>Zakryj</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="addPassword">
+    <property name="geometry">
+     <rect>
+      <x>702</x>
+      <y>280</y>
+      <width>91</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Dodaj Hasło</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
