@@ -9,6 +9,11 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QList>
+#include <QStringList>
+#include <QFileDialog>
+
+QList<QStringList> passwordArray;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -16,12 +21,14 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     connect(ui->quitButton, SIGNAL(clicked()), this, SLOT(close()));
+    //connect(ui->unhidePassword, SIGNAL(clicked(QTableWidget*)), this, SLOT(unhide(QTableWidget*)));
 
-    //Place for Array that will hold all info
 
     QTableWidget *passwords = ui->passwordsShower;
     initialSetup(passwords);
     readJson();
+    fillTable(passwords);
+
 }
 
 MainWindow::~MainWindow()
@@ -36,15 +43,13 @@ void MainWindow::initialSetup(QTableWidget *widget){
     widget->insertColumn(1);
     QStringList passwordlabel = {"Strony", "Hasła"};
     widget->setHorizontalHeaderLabels(passwordlabel);
-    //widget->insertRow(widget->rowCount());
-    //int currentRow = widget->rowCount() - 1;
-
-    //widget->setItem(currentRow, 0, new QTableWidgetItem("wordpress"));
 }
 
-//reads JSON file
-//TODO add JSON info to that fucking 2D array please
+//reads JSON file and adds information to Global QList
 void MainWindow::readJson(){
+    //QString filename = QFileDialog::getOpenFileName(this);
+
+    //QFile jsonFile(filename);
     QFile jsonFile("C:\\Users\\tomek\\Desktop\\PW\\Projekt\\PasswordManager\\Passwords.json");
     jsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
     QByteArray jsonFileData = jsonFile.readAll();
@@ -57,9 +62,57 @@ void MainWindow::readJson(){
     QJsonArray pairsArray = pairsArrayValue.toArray();
 
     foreach(const QJsonValue & v, pairsArray){
+        QStringList helper;
+        helper.append(v.toObject().value("site").toString());
+        helper.append(v.toObject().value("password").toString());
+
         qDebug() << v.toObject().value("site").toString();
         qDebug() << v.toObject().value("password").toString();
 
         qDebug() << "---------------------------";
+
+        passwordArray.append(helper);
+        helper.clear();
+    }
+
+    qDebug() << passwordArray;
+}
+
+//Fill our beautiful TableWidget
+void MainWindow::fillTable(QTableWidget *widget){
+    for(int i = 0; i < passwordArray.length(); i++){
+        widget->insertRow(widget->rowCount());
+        widget->setItem(i, 0, new QTableWidgetItem(passwordArray[i][0]));
+        widget->setItem(i, 1, new QTableWidgetItem("hidden"));
     }
 }
+
+//Shows password
+void MainWindow::unhide(QTableWidget *widget){
+    QTableWidgetItem *siteChosen = widget->item(widget->currentRow(), 0);
+    qDebug() << siteChosen->text();
+
+    for(int i = 0; i < passwordArray.length(); i++){
+        if(QString::compare(siteChosen->text(), passwordArray[i][0]) == 0){
+            widget->setItem(widget->currentRow(), 1, new QTableWidgetItem(passwordArray[i][1]));
+        }
+    }
+
+}
+
+//Hides password
+void MainWindow::hide(QTableWidget *widget){
+    widget->setItem(widget->currentRow(), 1, new QTableWidgetItem("hidden"));
+}
+
+void MainWindow::on_unhidePassword_clicked()
+{
+    unhide(ui->passwordsShower);
+}
+
+
+void MainWindow::on_hidePassword_clicked()
+{
+    hide(ui->passwordsShower);
+}
+

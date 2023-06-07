@@ -21,5 +21,12 @@ private:
     Ui::MainWindow *ui;
     void initialSetup(QTableWidget *widget);
     void readJson();
+    void fillTable(QTableWidget *widget);
+    void unhide(QTableWidget *widget);
+    void hide(QTableWidget *widget);
+
+private slots:
+    void on_unhidePassword_clicked();
+    void on_hidePassword_clicked();
 };
 #endif // MAINWINDOW_H

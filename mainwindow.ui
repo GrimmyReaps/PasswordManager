@@ -58,7 +58,7 @@
      <number>0</number>
     </property>
    </widget>
-   <widget class="QPushButton" name="addPassword">
+   <widget class="QPushButton" name="unhidePassword">
     <property name="geometry">
      <rect>
       <x>702</x>
@@ -68,7 +68,20 @@
      </rect>
     </property>
     <property name="text">
-     <string>Nowe Hasło</string>
+     <string>Odkryj</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="hidePassword">
+    <property name="geometry">
+     <rect>
+      <x>702</x>
+      <y>350</y>
+      <width>91</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Zakryj</string>
     </property>
    </widget>
   </widget>
