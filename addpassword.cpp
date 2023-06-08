@@ -1,6 +1,7 @@
 #include "addpassword.h"
 #include "ui_addpassword.h"
-#include "mainwindow.h"
+
+QStringList helperAddPassword;
 
 addPassword::addPassword(QWidget *parent) :
     QDialog(parent),
@@ -19,5 +20,12 @@ addPassword::~addPassword()
 
 
 void addPassword::addNewPassword(){
+    QString newSite = ui->siteText->toPlainText();
+    qDebug() << newSite;
+    QString newPassword = ui->passwordText->toPlainText();
+    qDebug() << newPassword;
 
+    helperAddPassword.clear();
+    helperAddPassword.append(newSite);
+    helperAddPassword.append(newPassword);
 }

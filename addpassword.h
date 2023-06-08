@@ -14,6 +14,7 @@ class addPassword : public QDialog
 public:
     explicit addPassword(QWidget *parent = nullptr);
     ~addPassword();
+    QStringList helperAddPassword;
 
 private:
     Ui::addPassword *ui;

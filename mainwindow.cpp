@@ -79,6 +79,7 @@ void MainWindow::readJson(){
 
 //Fill our beautiful TableWidget
 void MainWindow::fillTable(QTableWidget *widget){
+    widget->setRowCount(0);
     for(int i = 0; i < passwordArray.length(); i++){
         widget->insertRow(widget->rowCount());
         widget->setItem(i, 0, new QTableWidgetItem(passwordArray[i][0]));
@@ -106,7 +107,9 @@ void MainWindow::hide(QTableWidget *widget){
 
 void MainWindow::addPasswordWindow(){
     newPasswordWindow = new addPassword(this);
-    newPasswordWindow->show();
+    newPasswordWindow->exec();
+
+    fillTable(ui->passwordsShower);
 }
 
 //Button Click
