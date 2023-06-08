@@ -27,10 +27,12 @@ private:
     void fillTable(QTableWidget *widget);
     void unhide(QTableWidget *widget);
     void hide(QTableWidget *widget);
+    void deletePassword(QTableWidget *widget);
 
 private slots:
     void on_unhidePassword_clicked();
     void on_hidePassword_clicked();
     void addPasswordWindow();
+    void on_deletePassword_clicked();
 };
 #endif // MAINWINDOW_H

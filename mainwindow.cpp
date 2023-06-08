@@ -109,7 +109,22 @@ void MainWindow::addPasswordWindow(){
     newPasswordWindow = new addPassword(this);
     newPasswordWindow->exec();
 
-    fillTable(ui->passwordsShower);
+    if(newPasswordWindow->isAdded){
+        passwordArray.append(newPasswordWindow->helperAddPassword);
+        fillTable(ui->passwordsShower);
+    }
+}
+
+void MainWindow::deletePassword(QTableWidget *widget){
+    QTableWidgetItem *siteChosen = widget->item(widget->currentRow(), 0);
+    qDebug() << siteChosen->text();
+
+    for(int i = 0; i < passwordArray.length(); i++){
+        if(QString::compare(siteChosen->text(), passwordArray[i][0]) == 0){
+            passwordArray.removeAt(i);
+        }
+    }
+    fillTable(widget);
 }
 
 //Button Click
@@ -122,5 +137,12 @@ void MainWindow::on_unhidePassword_clicked()
 void MainWindow::on_hidePassword_clicked()
 {
     hide(ui->passwordsShower);
+}
+
+
+//Button Click
+void MainWindow::on_deletePassword_clicked()
+{
+    deletePassword(ui->passwordsShower);
 }
 

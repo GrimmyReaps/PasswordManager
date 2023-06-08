@@ -2,6 +2,7 @@
 #include "ui_addpassword.h"
 
 QStringList helperAddPassword;
+bool isAdded;
 
 addPassword::addPassword(QWidget *parent) :
     QDialog(parent),
@@ -28,4 +29,12 @@ void addPassword::addNewPassword(){
     helperAddPassword.clear();
     helperAddPassword.append(newSite);
     helperAddPassword.append(newPassword);
+
+    isAdded = true;
+    close();
+}
+
+void addPassword::cancelNewPassword(){
+    isAdded = false;
+    close();
 }

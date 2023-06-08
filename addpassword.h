@@ -15,12 +15,14 @@ public:
     explicit addPassword(QWidget *parent = nullptr);
     ~addPassword();
     QStringList helperAddPassword;
+    bool isAdded;
 
 private:
     Ui::addPassword *ui;
 
 private slots:
     void addNewPassword();
+    void cancelNewPassword();
 };
 
 #endif // ADDPASSWORD_H
