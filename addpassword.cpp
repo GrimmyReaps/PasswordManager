@@ -21,9 +21,9 @@ addPassword::~addPassword()
 
 
 void addPassword::addNewPassword(){
-    QString newSite = ui->siteText->toPlainText();
+    QString newSite = ui->siteText->text();
     qDebug() << newSite;
-    QString newPassword = ui->passwordText->toPlainText();
+    QString newPassword = ui->passwordText->text();
     qDebug() << newPassword;
 
     helperAddPassword.clear();

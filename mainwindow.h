@@ -28,6 +28,8 @@ private:
     void unhide(QTableWidget *widget);
     void hide(QTableWidget *widget);
     void deletePassword(QTableWidget *widget);
+    void saveJson();
+    QString loginPassword;
 
 private slots:
     void on_unhidePassword_clicked();

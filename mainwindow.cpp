@@ -14,6 +14,7 @@
 #include <QFileDialog>
 
 QList<QStringList> passwordArray;
+QString loginPassword;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -23,6 +24,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->quitButton, SIGNAL(clicked()), this, SLOT(close()));
     connect(ui->addPassword, SIGNAL(clicked()), this, SLOT(addPasswordWindow()));
 
+    loginPassword = "0000";
 
     QTableWidget *passwords = ui->passwordsShower;
     initialSetup(passwords);
@@ -105,6 +107,7 @@ void MainWindow::hide(QTableWidget *widget){
     widget->setItem(widget->currentRow(), 1, new QTableWidgetItem("hidden"));
 }
 
+//new window for password creation
 void MainWindow::addPasswordWindow(){
     newPasswordWindow = new addPassword(this);
     newPasswordWindow->exec();
@@ -112,9 +115,12 @@ void MainWindow::addPasswordWindow(){
     if(newPasswordWindow->isAdded){
         passwordArray.append(newPasswordWindow->helperAddPassword);
         fillTable(ui->passwordsShower);
+        saveJson();
     }
 }
 
+//Deltes password from everywhere
+//ToDo confirmation box
 void MainWindow::deletePassword(QTableWidget *widget){
     QTableWidgetItem *siteChosen = widget->item(widget->currentRow(), 0);
     qDebug() << siteChosen->text();
@@ -125,6 +131,38 @@ void MainWindow::deletePassword(QTableWidget *widget){
         }
     }
     fillTable(widget);
+    saveJson();
+}
+
+void MainWindow::saveJson(){
+    QJsonObject passwordDetails;
+    QJsonArray passwordDetailsArray;
+    QJsonObject credentials;
+    //Json object for password hash
+    credentials["password"] = loginPassword;
+
+    //Creating array for passwords storage
+    for(int i = 0; i < passwordArray.length(); i++){
+        passwordDetails["password"] = passwordArray[i][1];
+        passwordDetails["site"] = passwordArray[i][0];
+
+        passwordDetailsArray.push_back(passwordDetails);
+    }
+
+    //Bundling the objects up
+    QJsonObject obj;
+    obj["loginPassword"] = loginPassword;
+    obj["pairsArray"] = passwordDetailsArray;
+
+    //Creating document
+    QJsonDocument JsonDocument;
+    JsonDocument.setObject(obj);
+
+    //Writing it to JSON :D
+    QFile jsonFile("C:\\Users\\tomek\\Desktop\\PW\\Projekt\\PasswordManager\\Passwords.json");
+    jsonFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
+    jsonFile.write(JsonDocument.toJson(QJsonDocument::Indented));
+    jsonFile.close();
 }
 
 //Button Click
