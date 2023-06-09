@@ -20,6 +20,9 @@ set(PROJECT_SOURCES
         addpassword.h
         addpassword.cpp
         addpassword.ui
+        loginpasswordsmanager.h
+        loginpasswordsmanager.cpp
+        loginpasswordsmanager.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

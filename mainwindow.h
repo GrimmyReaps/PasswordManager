@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QTableWidget>
 #include "addpassword.h"
+#include "loginpasswordsmanager.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -22,14 +23,18 @@ public:
 private:
     Ui::MainWindow *ui;
     addPassword *newPasswordWindow;
+    loginPasswordsManager *changeSetPassword;
     void initialSetup(QTableWidget *widget);
-    void readJson();
+    void readJson(QString filename);
     void fillTable(QTableWidget *widget);
     void unhide(QTableWidget *widget);
     void hide(QTableWidget *widget);
     void deletePassword(QTableWidget *widget);
     void saveJson();
+    void hashPassword(QString *toHash);
+    void loginPasswordManagment();
     QString loginPassword;
+    QString getFolder();
 
 private slots:
     void on_unhidePassword_clicked();
