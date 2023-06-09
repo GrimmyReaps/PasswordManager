@@ -6,6 +6,7 @@
 #include "addpassword.h"
 #include "loginpasswordsmanager.h"
 #include "setpassword.h"
+#include "checklogincredentials.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -26,13 +27,14 @@ private:
     addPassword *newPasswordWindow;
     loginPasswordsManager *changeSetPassword;
     setPassword *setPasswordWindow;
+    checkLoginCredentials *loginCredentials;
     void initialSetup(QTableWidget *widget);
     void readJson(QString filename);
     void fillTable(QTableWidget *widget);
     void unhide(QTableWidget *widget);
     void hide(QTableWidget *widget);
     void deletePassword(QTableWidget *widget);
-    void saveJson();
+    void saveJson(QString filename);
     QString hashPassword(QString toHash);
     void loginPasswordManagment();
     QString loginPassword;

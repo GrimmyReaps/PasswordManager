@@ -59,13 +59,36 @@ void MainWindow::readJson(QString filename){
     jsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
     QByteArray jsonFileData = jsonFile.readAll();
     jsonFile.close();
+    QJsonDocument importantInfoDoc = QJsonDocument::fromJson(jsonFileData);
+    QJsonObject importantInfoObj = importantInfoDoc.object();
+    QJsonValue importantInfoVal = importantInfoObj.value("loginPassword");
 
-    if(jsonFileData.isEmpty()){
+    if(importantInfoVal.toString().isEmpty()){
         qDebug() << "is Empty";
         setPasswordWindow = new setPassword(this);
         setPasswordWindow->exec();
 
-        hashPassword(setPasswordWindow->passwordToHash);
+        loginPassword = hashPassword(setPasswordWindow->passwordToHash);
+        saveJson(getFolder());
+    }else{
+        int i = 0;
+        bool correct = true;
+
+        do{
+            loginCredentials = new checkLoginCredentials(this);
+            loginCredentials->exec();
+            QString enteredValue = loginCredentials->checkIfCorrect;
+            if(importantInfoVal.toString() == hashPassword(enteredValue)){
+                correct = false;
+            }else{
+                i++;
+                qDebug() << i;
+                loginCredentials->Info = ("Pozostało " + QString::number(3-i) + " prób");
+                if(i == 3){
+                    QCoreApplication::quit();
+                }
+            }
+        } while(correct);
     }
 
     //Make document into an object
@@ -130,7 +153,7 @@ void MainWindow::addPasswordWindow(){
     if(newPasswordWindow->isAdded){
         passwordArray.append(newPasswordWindow->helperAddPassword);
         fillTable(ui->passwordsShower);
-        saveJson();
+        saveJson(getFolder());
     }
 }
 
@@ -150,11 +173,11 @@ void MainWindow::deletePassword(QTableWidget *widget){
             }
         }
         fillTable(widget);
-        saveJson();
+        saveJson(getFolder());
     }
 }
 
-void MainWindow::saveJson(){
+void MainWindow::saveJson(QString filename){
     QJsonObject passwordDetails;
     QJsonArray passwordDetailsArray;
     QJsonObject credentials;
@@ -179,7 +202,7 @@ void MainWindow::saveJson(){
     JsonDocument.setObject(obj);
 
     //Writing it to JSON :D
-    QFile jsonFile("C:\\Users\\tomek\\Desktop\\PW\\Projekt\\PasswordManager\\Passwords.json");
+    QFile jsonFile(filename);
     jsonFile.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
     jsonFile.write(JsonDocument.toJson(QJsonDocument::Indented));
     jsonFile.close();
@@ -188,7 +211,9 @@ void MainWindow::saveJson(){
 //hashing passwords
 QString MainWindow::hashPassword(QString toHash){
     QByteArray makeHash;
+    QString salt = "0xcbf50fed";
     makeHash.append(toHash.toStdString().c_str());
+    makeHash.append(salt.toStdString().c_str());
     QString hashedSaltedPsw = QCryptographicHash::hash(makeHash, QCryptographicHash::Blake2s_224).toHex();
     qDebug() << "encrypted psw: " << hashedSaltedPsw;
     return hashedSaltedPsw;
@@ -196,7 +221,7 @@ QString MainWindow::hashPassword(QString toHash){
 
 void MainWindow::loginPasswordManagment(){
     //Open JSON
-    QFile jsonFile("C:\\Users\\tomek\\Desktop\\PW\\Projekt\\PasswordManager\\Passwords.json");
+    QFile jsonFile(getFolder());
     jsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
     QByteArray jsonFileData = jsonFile.readAll();
     jsonFile.close();
