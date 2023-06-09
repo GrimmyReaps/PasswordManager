@@ -16,6 +16,8 @@
 #include <QCryptographicHash>
 #include <QByteArray>
 #include <QStandardPaths>
+#include <QPushButton>
+#include <QDialogButtonBox>
 
 QList<QStringList> passwordArray;
 QString loginPassword;
@@ -60,9 +62,12 @@ void MainWindow::readJson(QString filename){
 
     if(jsonFileData.isEmpty()){
         qDebug() << "is Empty";
-        changeSetPassword = new loginPasswordsManager(this);
-        changeSetPassword->exec();
+        setPasswordWindow = new setPassword(this);
+        setPasswordWindow->exec();
+
+        hashPassword(setPasswordWindow->passwordToHash);
     }
+
     //Make document into an object
     QJsonDocument jsonDocument = QJsonDocument::fromJson(jsonFileData);
     QJsonObject jsonObject = jsonDocument.object();
@@ -130,7 +135,6 @@ void MainWindow::addPasswordWindow(){
 }
 
 //Deltes password from everywhere
-//ToDo confirmation box
 void MainWindow::deletePassword(QTableWidget *widget){
     QMessageBox::StandardButton reply;
     reply = QMessageBox::question(this, "Confirm Deletion", "Czy jesteś pewien",
@@ -182,11 +186,12 @@ void MainWindow::saveJson(){
 }
 
 //hashing passwords
-void MainWindow::hashPassword(QString *toHash){
+QString MainWindow::hashPassword(QString toHash){
     QByteArray makeHash;
-    makeHash.append(toHash->toStdString().c_str());
+    makeHash.append(toHash.toStdString().c_str());
     QString hashedSaltedPsw = QCryptographicHash::hash(makeHash, QCryptographicHash::Blake2s_224).toHex();
     qDebug() << "encrypted psw: " << hashedSaltedPsw;
+    return hashedSaltedPsw;
 }
 
 void MainWindow::loginPasswordManagment(){

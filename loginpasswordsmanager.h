@@ -14,9 +14,10 @@ class loginPasswordsManager : public QDialog
 public:
     explicit loginPasswordsManager(QWidget *parent = nullptr);
     ~loginPasswordsManager();
+     Ui::loginPasswordsManager *ui;
 
 private:
-    Ui::loginPasswordsManager *ui;
+
 };
 
 #endif // LOGINPASSWORDSMANAGER_H
