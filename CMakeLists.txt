@@ -26,9 +26,6 @@ set(PROJECT_SOURCES
         setpassword.h
         setpassword.cpp
         setpassword.ui
-        checklogincredentials.h
-        checklogincredentials.cpp
-        checklogincredentials.ui
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

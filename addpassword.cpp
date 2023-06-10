@@ -10,7 +10,7 @@ addPassword::addPassword(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    connect(ui->buttonBox, SIGNAL(rejected()), this, SLOT(close()));
+    connect(ui->buttonBox, SIGNAL(rejected()), this, SLOT(cancelNewPassword()));
     connect(ui->buttonBox, SIGNAL(accepted()), this, SLOT(addNewPassword()));
 }
 
@@ -37,4 +37,12 @@ void addPassword::addNewPassword(){
 void addPassword::cancelNewPassword(){
     isAdded = false;
     close();
+}
+
+void addPassword::siteSetter(QString site){
+    ui->siteText->setText(site);
+}
+
+void addPassword::passwordSetter(QString password){
+    ui->passwordText->setText(password);
 }

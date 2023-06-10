@@ -21,18 +21,24 @@
 
 QList<QStringList> passwordArray;
 QString loginPassword;
+int failedLoginCheck;
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    failedLoginCheck = 0;
     ui->setupUi(this);
     connect(ui->quitButton, SIGNAL(clicked()), this, SLOT(close()));
     connect(ui->addPassword, SIGNAL(clicked()), this, SLOT(addPasswordWindow()));
+    connect(ui->aboutCreator, SIGNAL(clicked()), this, SLOT(aboutMe()));
+    connect(ui->deleteAll, SIGNAL(clicked()), this, SLOT(deleteAll()));
+    QPalette palette = ui->loginInformation->palette();
+    palette.setColor(ui->loginInformation->foregroundRole(), Qt::red);
+    ui->loginInformation->setPalette(palette);
 
     QTableWidget *passwords = ui->passwordsShower;
     initialSetup(passwords);
-    readJson(getFolder());
 
 }
 
@@ -50,6 +56,57 @@ void MainWindow::initialSetup(QTableWidget *widget){
     widget->setHorizontalHeaderLabels(passwordlabel);
 }
 
+void MainWindow::startApp(QString filename){
+    QFile jsonFile(filename);
+    jsonFile.open(QIODevice::ReadOnly | QIODevice::Text);
+    QByteArray jsonFileData = jsonFile.readAll();
+    jsonFile.close();
+    QJsonDocument importantInfoDoc = QJsonDocument::fromJson(jsonFileData);
+    QJsonObject importantInfoObj = importantInfoDoc.object();
+    QJsonValue importantInfoVal = importantInfoObj.value("loginPassword");
+
+    loginPassword = importantInfoVal.toString();
+
+    if(loginPassword.isEmpty()){
+
+        qDebug() << "is Empty";
+        setPasswordWindow = new setPassword(this);
+        setPasswordWindow->exec();
+
+        loginPassword = hashPassword(setPasswordWindow->getter());
+
+        setPasswordWindow->close();
+
+        saveJson(getFolder());
+        readJson(getFolder());
+        ui->addPassword->setEnabled(true);
+        ui->hidePassword->setEnabled(true);
+        ui->unhidePassword->setEnabled(true);
+        ui->deletePassword->setEnabled(true);
+        ui->deleteAll->setEnabled(true);
+        ui->editPassword->setEnabled(true);
+        ui->startApp->setEnabled(false);
+    }else{
+        if(ui->loginPasswordText->text().isEmpty()){
+            return;
+        }else if(hashPassword(ui->loginPasswordText->text()) == loginPassword){
+            ui->addPassword->setEnabled(true);
+            ui->hidePassword->setEnabled(true);
+            ui->unhidePassword->setEnabled(true);
+            ui->deletePassword->setEnabled(true);
+            ui->deleteAll->setEnabled(true);
+            ui->editPassword->setEnabled(true);
+            ui->startApp->setEnabled(false);
+            readJson(getFolder());
+        }else{
+            failedLoginCheck++;
+            ui->loginInformation->setText("Pozostało " + QString::number(3-failedLoginCheck) + " prób");
+            if(failedLoginCheck == 3)
+                ui->startApp->setEnabled(false);
+        }
+    }
+}
+
 //reads JSON file and adds information to Global QList
 void MainWindow::readJson(QString filename){
     //QString filename = QFileDialog::getOpenFileName(this);
@@ -62,34 +119,6 @@ void MainWindow::readJson(QString filename){
     QJsonDocument importantInfoDoc = QJsonDocument::fromJson(jsonFileData);
     QJsonObject importantInfoObj = importantInfoDoc.object();
     QJsonValue importantInfoVal = importantInfoObj.value("loginPassword");
-
-    if(importantInfoVal.toString().isEmpty()){
-        qDebug() << "is Empty";
-        setPasswordWindow = new setPassword(this);
-        setPasswordWindow->exec();
-
-        loginPassword = hashPassword(setPasswordWindow->passwordToHash);
-        saveJson(getFolder());
-    }else{
-        int i = 0;
-        bool correct = true;
-
-        do{
-            loginCredentials = new checkLoginCredentials(this);
-            loginCredentials->exec();
-            QString enteredValue = loginCredentials->checkIfCorrect;
-            if(importantInfoVal.toString() == hashPassword(enteredValue)){
-                correct = false;
-            }else{
-                i++;
-                qDebug() << i;
-                loginCredentials->Info = ("Pozostało " + QString::number(3-i) + " prób");
-                if(i == 3){
-                    QCoreApplication::quit();
-                }
-            }
-        } while(correct);
-    }
 
     //Make document into an object
     QJsonDocument jsonDocument = QJsonDocument::fromJson(jsonFileData);
@@ -157,6 +186,36 @@ void MainWindow::addPasswordWindow(){
     }
 }
 
+
+void MainWindow::editPassword(QTableWidget *widget){
+    QTableWidgetItem *siteChosen = widget->item(widget->currentRow(), 0);
+    qDebug() << siteChosen->text();
+    QString searcher = siteChosen->text();
+    QString password;
+    for(int i = 0; i < passwordArray.length(); i++){
+        if(QString::compare(searcher, passwordArray[i][0]) == 0){
+            password = passwordArray[i][1];
+            break;
+        }
+    }
+
+    newPasswordWindow = new addPassword(this);
+    newPasswordWindow->siteSetter(searcher);
+    newPasswordWindow->passwordSetter(password);
+    newPasswordWindow->exec();
+
+    if(newPasswordWindow->isAdded){
+        for(int i = 0; i < passwordArray.length(); i++){
+            if(QString::compare(siteChosen->text(), passwordArray[i][0]) == 0){
+                passwordArray.removeAt(i);
+            }
+        }
+        passwordArray.append(newPasswordWindow->helperAddPassword);
+        fillTable(ui->passwordsShower);
+        saveJson(getFolder());
+    }
+}
+
 //Deltes password from everywhere
 void MainWindow::deletePassword(QTableWidget *widget){
     QMessageBox::StandardButton reply;
@@ -173,6 +232,18 @@ void MainWindow::deletePassword(QTableWidget *widget){
             }
         }
         fillTable(widget);
+        saveJson(getFolder());
+    }
+}
+
+void MainWindow::deleteAll(){
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "Confirm Deletion", "Czy jesteś pewien",
+                                  QMessageBox::Yes|QMessageBox::No);
+    if(reply == QMessageBox::Yes){
+        ui->passwordsShower->setRowCount(0);
+        passwordArray.clear();
+        fillTable(ui->passwordsShower);
         saveJson(getFolder());
     }
 }
@@ -251,6 +322,12 @@ QString MainWindow::getFolder(){
     return filePath;
 }
 
+void MainWindow::aboutMe(){
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "O mnie", "Przygotował\n\rTomasz Niedziela ISI 1",
+                                  QMessageBox::Yes|QMessageBox::Ok);
+}
+
 //Button Click
 void MainWindow::on_unhidePassword_clicked()
 {
@@ -268,5 +345,17 @@ void MainWindow::on_hidePassword_clicked()
 void MainWindow::on_deletePassword_clicked()
 {
     deletePassword(ui->passwordsShower);
+}
+
+
+void MainWindow::on_startApp_clicked()
+{
+    startApp(getFolder());
+}
+
+
+void MainWindow::on_editPassword_clicked()
+{
+    editPassword(ui->passwordsShower);
 }
 

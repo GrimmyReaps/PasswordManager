@@ -16,6 +16,8 @@ public:
     ~addPassword();
     QStringList helperAddPassword;
     bool isAdded;
+    void passwordSetter(QString password);
+    void siteSetter(QString site);
 
 private:
     Ui::addPassword *ui;

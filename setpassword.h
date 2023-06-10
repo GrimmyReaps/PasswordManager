@@ -15,6 +15,7 @@ public:
     explicit setPassword(QWidget *parent = nullptr);
     ~setPassword();
     QString passwordToHash;
+    QString getter();
 
 private:
     Ui::setPassword *ui;

@@ -11,7 +11,7 @@ setPassword::setPassword(QWidget *parent) :
     ui->setupUi(this);
 
     connect(ui->Ok, SIGNAL(clicked()), this, SLOT(checkPassword()));
-    //Zmiana koloru textu na czerwony
+    //Change the colour to red
     QPalette palette = ui->information->palette();
     palette.setColor(ui->information->foregroundRole(), Qt::red);
     ui->information->setPalette(palette);
@@ -30,11 +30,15 @@ void setPassword::checkPassword(){
     if(check.hasMatch()){
         if(ui->setPasswordText->text() == ui->repeatPasswordText->text()){
             QString passwordToHash = ui->setPasswordText->text();
-            close();
+            hide();
         }else{
             ui->information->setText("Hasła się nie zgadzają");
         }
     }else{
         ui->information->setText("Hasło wymaga minimum jednej dużej litery, małej litery, cyfry i znaku specjalnego");
     }
+}
+
+QString setPassword::getter(){
+    return ui->setPasswordText->text();
 }

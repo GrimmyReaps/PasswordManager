@@ -44,7 +44,7 @@
      <rect>
       <x>15</x>
       <y>11</y>
-      <width>681</width>
+      <width>581</width>
       <height>541</height>
      </rect>
     </property>
@@ -59,10 +59,13 @@
     </property>
    </widget>
    <widget class="QPushButton" name="unhidePassword">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>702</x>
-      <y>418</y>
+      <y>420</y>
       <width>91</width>
       <height>61</height>
      </rect>
@@ -72,10 +75,13 @@
     </property>
    </widget>
    <widget class="QPushButton" name="hidePassword">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>702</x>
-      <y>350</y>
+      <x>600</x>
+      <y>420</y>
       <width>91</width>
       <height>61</height>
      </rect>
@@ -85,10 +91,13 @@
     </property>
    </widget>
    <widget class="QPushButton" name="addPassword">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>702</x>
-      <y>280</y>
+      <x>700</x>
+      <y>350</y>
       <width>91</width>
       <height>61</height>
      </rect>
@@ -98,16 +107,119 @@
     </property>
    </widget>
    <widget class="QPushButton" name="deletePassword">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>700</x>
-      <y>210</y>
+      <x>600</x>
+      <y>350</y>
       <width>91</width>
       <height>61</height>
      </rect>
     </property>
     <property name="text">
      <string>Usuń Hasło</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="loginPasswordText">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>20</y>
+      <width>191</width>
+      <height>28</height>
+     </rect>
+    </property>
+    <property name="echoMode">
+     <enum>QLineEdit::Password</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>0</y>
+      <width>191</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Password to application</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="startApp">
+    <property name="geometry">
+     <rect>
+      <x>690</x>
+      <y>50</y>
+      <width>101</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Start Application</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="loginInformation">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>50</y>
+      <width>91</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="editPassword">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>700</x>
+      <y>280</y>
+      <width>91</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Edytuj Hasło</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="aboutCreator">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>490</y>
+      <width>91</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>O mnie</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="deleteAll">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>280</y>
+      <width>91</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Usuń wszystko</string>
     </property>
    </widget>
   </widget>
